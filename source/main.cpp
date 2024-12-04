@@ -8,14 +8,14 @@ struct BinarySearchTree {
     vector<int> left, right; // left[i]: nut con ben trai i va ke voi i, right[i] tuong tu
     BinarySearchTree() {}
 };
-long long dfs(int u, int h, BinarySearchTree t, const vector<int> &freq) {
+long long dfs(int u, int h, const BinarySearchTree &t, const vector<int> &freq) {
     // Tinh tong freq[u] * h[u] trong cay tim kiem nhi phan t
     long long sum = 1LL * freq[u] * h;
     if (t.left[u] != -1) sum += dfs(t.left[u], h + 1, t, freq);
     if (t.right[u] != -1) sum += dfs(t.right[u], h + 1, t, freq);
     return sum;
 }
-long long cost(BinarySearchTree t, const vector<int> &freq) {
+long long cost(const BinarySearchTree &t, const vector<int> &freq) {
     // Tinh tong chi phi truy cap cua cay tim kiem nhi phan t khi biet so lan truy cap vao cac khoa
     return dfs(t.root, 1, t, freq);
 }

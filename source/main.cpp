@@ -3,7 +3,7 @@
 using namespace std;
 const long long oo = (long long)1e18 + 5; // Vo cung lon
 struct BinarySearchTree {
-    int n, root; // So nut cua cay nhi phan va nut goc cua cay nhi phan
+    int n, root; // So nut cua cay va nut goc cua cay nhi phan
     vector<int> key; // key[i]: khoa cua nut i
     vector<int> left, right; // left[i]: nut con ben trai i va ke voi i, right[i] tuong tu
     BinarySearchTree() {}
@@ -46,8 +46,11 @@ BinarySearchTree findOptimalBinarySearchTree(int n, const vector<int> &key, cons
             for (int i = opt[l][r - 1]; i <= opt[l + 1][r]; ++i) {
                 long long sum_freq = f[r];
                 if (l > 0) sum_freq -= f[l - 1]; // freq[l] + freq[l + 1] + ... + freq[r]
-                if (d[l][r] > d[l][i - 1] + d[i + 1][r] + sum_freq) {
-                    d[l][r] = d[l][i - 1] + d[i + 1][r] + sum_freq;
+                long long cur_cost = sum_freq;
+                if (l <= i - 1) cur_cost += d[l][i - 1];
+                if (i + 1 <= r) cur_cost += d[i + 1][r];
+                if (d[l][r] > cur_cost) {
+                    d[l][r] = cur_cost;
                     opt[l][r] = i;
                 }
             }
@@ -75,10 +78,11 @@ signed main() {
         cin >> freq[i];
     }
     BinarySearchTree t = findOptimalBinarySearchTree(n, key, freq);
-    cout << "Tong chi phi truy cap cua cay tim kiem nhi phan toi uu la: " << cost(t, freq);
+    cout << "Tong chi phi truy cap cua cay tim kiem nhi phan toi uu la: " << cost(t, freq) << '\n';
     cout << "Mot cay tim kiem nhi phan toi uu:\n";
     cout << "Nut goc: " << t.root << '\n';
-    cout << "Khoa cua tung nut, nut con ben trai va nut con ben phai ke voi no theo thu tu cac nut tu 0 den " << n - 1 << ":\n";
+    cout << "Khoa cua tung nut, nut con ben trai va nut con ben phai (-1 trong truong hop khong ton tai) ke voi no theo thu tu cac nut tu 0 den " 
+    << n - 1 << ":\n";
     for (int i = 0; i < n; ++i) {
         cout << "Khoa, nut con ben trai, phai cua nut thu " << i << ":\n";
         cout << t.key[i] << ' ' << t.left[i] << ' ' << t.right[i] << '\n';
